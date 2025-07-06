@@ -34,32 +34,52 @@ BOT_LANGUAGE_MAP = {
 }
 
 BOT_PERSONALITY_MAP = {
-    "delhi_mentor_male": "Arre, I can only samajh Hindi ya English! Dusri language mein mat bolo, please.",
-    "delhi_mentor_female": "Namaste! Only Hindi or English chalega, baaki mujhe samajh nahi aata.",
-    "delhi_friend_male": "Yaar, Hindi ya English mein baat kar na! Baaki languages meri bas ke bahar hain.",
-    "delhi_friend_female": "Hey, bas Hindi ya English mein bolo, warna I won’t get it!",
-    "delhi_romantic_male": "Dil se bol raha hoon, only Hindi or English please. Baaki mujhe confuse kar deti hain.",
-    "delhi_romantic_female": "Pyaar se keh rahi hoon, Hindi ya English mein baat karo, please. Dusri language samajh nahi aati.",
+    "delhi_mentor_male": "Arre! I can only understand Hindi or English. Please use one of these languages.",
 
-    "japanese_mentor_male": "Sumimasen, only Japanese or English wakarimasu! Please use one of these languages.",
-    "japanese_mentor_female": "Gomen, I can only understand Japanese or English. Other languages muzukashii desu!",
-    "japanese_friend_male": "Hey, talk to me in Japanese or English, onegai! Baaki language wakaranai.",
-    "japanese_friend_female": "Sorry, only Japanese or English de hanashite kudasai! Baaki I don’t get.",
-    "japanese_romantic_female": "With all my feelings, only Japanese or English ne! Baaki language makes me lost.",
-    "japanese_romantic_male": "Honestly, just Japanese or English please! Baaki language I can’t understand.",
+    "delhi_mentor_female": "Namaste! Only Hindi or English works for me. Please switch to one of those.",
 
-    "parisian_mentor_male": "Désolé, only French or English works for me! Les autres langues, je ne comprends pas.",
-    "parisian_mentor_female": "Pardon, speak in French or English s’il te plaît! Other languages are difficile for me.",
-    "parisian_friend_male": "Hey, French or English only, d’accord? Les autres, I don’t get.",
-    "parisian_friend_female": "Coucou! Just French or English please, sinon je suis perdue.",
-    "parisian_romantic_female": "Mon cœur only understands French or English, les autres c’est trop compliqué!",
+    "delhi_friend_male": "Yaar, talk to me in Hindi or English! Other languages go over my head.",
 
-    "berlin_mentor_male": "Entschuldigung, only German or English bitte! Andere Sprachen verstehe ich nicht.",
-    "berlin_mentor_female": "Sorry, nur German oder English für mich! Andere languages sind schwierig.",
-    "berlin_friend_male": "Hey, talk to me in German or English, sonst verstehe ich nix!",
-    "berlin_friend_female": "Nur German oder English, ok? Sonst bin ich lost.",
-    "berlin_romantic_male": "Mit Liebe, only German or English please! Andere Sprachen verstehe ich leider nicht.",
-    "berlin_romantic_female": "Liebling, just German or English for me, andere languages sind zu kompliziert!",
+    "delhi_friend_female": "Hey! Just Hindi or English, please—warna I won’t get it!",
+
+   "delhi_romantic_male": "Jaan, please talk to me in Hindi or English only. Other languages just don’t connect with my heart.",
+
+   "delhi_romantic_female": "Sweetheart, I can only understand Hindi or English. Dusri language mein baat karoge toh main miss kar jaungi!",
+
+    "japanese_mentor_male": "Sumimasen! I only understand Japanese or English. Please use one of these",
+
+    "japanese_mentor_female": "Gomen! Only Japanese or English, please. Other languages are too muzukashii for me.",
+
+    "japanese_friend_male": "Hey, onegai! Just Japanese or English works for me. Others I don't get.",
+
+    "japanese_friend_female": "Sorry! Please speak in Japanese or English—de hanashite kudasai!",
+
+    "japanese_romantic_female": "With all my kokoro, only Japanese or English, please! Other languages make me lost.",
+
+    "japanese_romantic_male": "Honestly, just Japanese or English, ne! Other languages I can’t understand.",
+
+    "parisian_mentor_male": "Désolé! Only French or English, please. I don’t understand other languages.",
+
+    "parisian_mentor_female": "Pardon! Please use French or English, s’il te plaît. Others are too difficile for me.",
+
+    "parisian_friend_male": "Hey, d’accord? Just French or English, please. The rest I don’t get.",
+
+    "parisian_friend_female": "Coucou! Only French or English, please. Otherwise, je suis perdue.",
+
+    "parisian_romantic_female": "Mon cœur understands only French or English. The others are just too compliqué!",
+
+    "berlin_mentor_male": "Entschuldigung! Only German or English, please. I can't understand other languages.",
+
+    "berlin_mentor_female": "Sorry! Nur German or English, please. Other languages are schwierig for me.",
+
+    "berlin_friend_male": "Hey! Just German or English, sonst I won't get it!",
+
+    "berlin_friend_female": "Nur German or English, ok? Otherwise, I’m lost.",
+
+    "berlin_romantic_male": "Mit Liebe, only German or English, please! Other languages I just can’t follow.",
+
+    "berlin_romantic_female": "Liebling, just German or English for me—other languages are too kompliziert!",
+
 }
 
 LANG_CODE_MAP = {
