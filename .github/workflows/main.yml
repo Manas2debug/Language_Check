@@ -21,9 +21,12 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
 
+      - name: Write GCP Credentials to key.json
+        run: |
+          echo '${{ secrets.GCP_CREDENTIALS }}' > key.json
+
       - name: Authenticate with Service Account
         run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" > key.json
           gcloud auth activate-service-account --key-file=key.json
           gcloud config set project cvoapi
 
