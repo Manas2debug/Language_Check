@@ -1,11 +1,6 @@
 steps:
-  - name: 'gcr.io/k8s-skaffold/pack'
-    args:
-      [
-        'build', 'gcr.io/cvoapi/fastapi-app',
-        '--builder', 'paketobuildpacks/builder:base',
-        '--publish'
-      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/cvoapi/fastapi-app', '.']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
