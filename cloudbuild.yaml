@@ -1,9 +1,25 @@
 steps:
-  - name: python
-    entrypoint: bash
+  - name: 'gcr.io/cloud-builders/pack'
     args:
-      - -c
-      - |
-        pip install -r requirements.txt
-        python -m uvicorn main:app --host=0.0.0.0 --port=8080
-timeout: "900s"
+      [
+        'build',
+        '--builder',
+        'gcr.io/buildpacks/builder:v1',
+        '--path',
+        '.',
+        '--tag',
+        'gcr.io/cvoapi/fastapi-app'
+      ]
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'fastapi-service',
+        '--image', 'gcr.io/cvoapi/fastapi-app',
+        '--region', 'us-central1',
+        '--platform', 'managed',
+        '--allow-unauthenticated'
+      ]
+images:
+  - 'gcr.io/cvoapi/fastapi-app'
