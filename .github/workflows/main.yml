@@ -1,0 +1,32 @@
+name: Deploy to Cloud Run 
+
+on:
+  push:
+    branches:
+      - main  # Change if your default branch is different
+
+jobs:
+  deploy:
+    name: Build & Deploy FastAPI (Cloud Build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: cvoapi
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud builds submit --tag gcr.io/cvoapi/fastapi-app
+          
+          gcloud run deploy fastapi-service \
+            --image gcr.io/cvoapi/fastapi-app \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated
