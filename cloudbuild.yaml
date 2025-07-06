@@ -1,14 +1,14 @@
 steps:
-  - name: 'gcr.io/cloud-builders/pack'
+  - name: 'docker.io/buildpacksio/pack'
+    entrypoint: pack
     args:
       [
         'build',
+        'gcr.io/cvoapi/fastapi-app',
         '--builder',
         'gcr.io/buildpacks/builder:v1',
         '--path',
-        '.',
-        '--tag',
-        'gcr.io/cvoapi/fastapi-app'
+        '.'
       ]
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -21,5 +21,6 @@ steps:
         '--platform', 'managed',
         '--allow-unauthenticated'
       ]
+
 images:
   - 'gcr.io/cvoapi/fastapi-app'
