@@ -45,5 +45,5 @@ jobs:
         run: |
           gcloud run services add-iam-policy-binding fastapi-service \
             --region=us-central1 \
-            --member="serviceAccount:novi-804@cvoapi.iam.gserviceaccount.com" \
+            --member="allUsers" \
             --role="roles/run.invoker"
