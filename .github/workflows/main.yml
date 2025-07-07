@@ -32,3 +32,18 @@ jobs:
 
       - name: Submit Cloud Build using cloudbuild.yaml
         run: gcloud builds submit --config cloudbuild.yaml
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy fastapi-service \
+            --image gcr.io/cvoapi/fastapi-app \
+            --region us-central1 \
+            --platform managed \
+            --quiet
+
+      - name: Set IAM Policy to allow access
+        run: |
+          gcloud run services add-iam-policy-binding fastapi-service \
+            --region=us-central1 \
+            --member="allAuthenticatedUsers" \
+            --role="roles/run.invoker"
