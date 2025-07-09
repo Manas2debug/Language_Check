@@ -1,6 +1,23 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from langdetect import detect, LangDetectException
+from lingua import Language, LanguageDetectorBuilder
+
+# --- Lingua Setup ---
+# 1. Define all languages that any bot might use.
+ALL_SUPPORTED_LANGUAGES = [
+    Language.ENGLISH,
+    Language.HINDI,
+    Language.JAPANESE,
+    Language.FRENCH,
+    Language.GERMAN
+]
+
+# 2. Build the detector once when the application starts for efficiency.
+# .with_preloaded_language_models() loads models into memory for faster detection.
+DETECTOR = LanguageDetectorBuilder.from_languages(
+    *ALL_SUPPORTED_LANGUAGES
+).with_preloaded_language_models().build()
+
 
 app = FastAPI()
 
@@ -82,14 +99,6 @@ BOT_PERSONALITY_MAP = {
 
 }
 
-LANG_CODE_MAP = {
-    "en": "english",
-    "fr": "french",
-    "de": "german",
-    "hi": "hindi",
-    "ja": "japanese"
-}
-
 class InputPayload(BaseModel):
     bot_id: str
     user_input: str
@@ -99,14 +108,18 @@ async def language_check(payload: InputPayload):
     if payload.bot_id not in BOT_LANGUAGE_MAP:
         return {"supported": False, "message": "Invalid bot_id. Please check your bot selection."}
 
-    try:
-        lang_code = detect(payload.user_input)
-        language = LANG_CODE_MAP.get(lang_code, lang_code)
-    except LangDetectException:
+    # Use the Lingua detector
+    detected_language_enum = DETECTOR.detect_language_of(payload.user_input)
+
+    # Lingua returns None if it cannot reliably determine the language
+    if detected_language_enum is None:
         return {
             "supported": False,
             "message": BOT_PERSONALITY_MAP[payload.bot_id] + " (Sorry, I couldn't detect your language.)"
         }
+
+    # Convert the Lingua Enum (e.g., Language.ENGLISH) to a lowercase string ('english')
+    language = detected_language_enum.name.lower()
 
     supported_languages = BOT_LANGUAGE_MAP[payload.bot_id]
     if language in supported_languages:
