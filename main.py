@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from lingua import Language, LanguageDetectorBuilder
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- Lingua Setup ---
 # 1. Define all languages that any bot might use.
@@ -20,6 +21,14 @@ DETECTOR = LanguageDetectorBuilder.from_languages(
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
