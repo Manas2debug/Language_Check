@@ -21,13 +21,7 @@ DETECTOR = LanguageDetectorBuilder.from_languages(
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # You can use ["http://localhost:3000"] for tighter security
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 BOT_LANGUAGE_MAP = {
     "delhi_mentor_male": ["hindi", "english"],
