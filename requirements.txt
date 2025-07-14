@@ -1,3 +1,6 @@
 fastapi
 uvicorn
 lingua-language-detector
+transformers
+torch
+sentencepiece
