@@ -13,7 +13,7 @@ steps:
         '--image', 'gcr.io/cvoapi/fastapi-app',
         '--region', 'us-central1',
         '--platform', 'managed',
-        '--allow-unauthenticated'
+        '--allow-unauthenticated',
         '--timeout=300s'
       ]
 
