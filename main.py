@@ -38,13 +38,7 @@ except Exception as e:
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Replace "*" with your frontend domain in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+
 
 # --- Bot Configuration (No changes needed here) ---
 BOT_LANGUAGE_MAP = {
