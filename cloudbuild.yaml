@@ -13,8 +13,7 @@ steps:
         '--image', 'gcr.io/cvoapi/fastapi-app',
         '--region', 'us-central1',
         '--platform', 'managed',
-        '--allow-unauthenticated',
-        '--set-env-vars=PORT=8080'
+        '--allow-unauthenticated'
       ]
 
 images:
