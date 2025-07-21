@@ -1,6 +1,3 @@
-#
-# Replace the content of your second code cell (the one with your FastAPI app) with this
-#
 import torch
 import re
 from fastapi import FastAPI
@@ -11,16 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # --- Model & Detector Setup ---
 
-
-
-# 1. Lingua Detector for broad language identification
+# 1. Lingua Language Detector Setup
 ALL_SUPPORTED_LANGUAGES = [
     Language.ENGLISH, Language.HINDI, Language.JAPANESE, Language.FRENCH, Language.GERMAN
 ]
 DETECTOR = LanguageDetectorBuilder.from_languages(*ALL_SUPPORTED_LANGUAGES).with_preloaded_language_models().build()
 
-# 2. Specialized Hinglish Detector
-# This model is loaded once at startup for efficiency.
+# 2. Specialized Hinglish Detector Model
 try:
     HINGLISH_MODEL_NAME = "l3cube-pune/hing-bert-lid"
     device = 0 if torch.cuda.is_available() else -1
@@ -31,8 +25,10 @@ try:
     )
     print(f"Hinglish detector model '{HINGLISH_MODEL_NAME}' loaded successfully.")
 except Exception as e:
-    print(f"CRITICAL: Failed to load Hinglish detector model. Hinglish checks will be skipped. Error: {e}")
+    print(f"CRITICAL: Failed to load Hinglish model. Hinglish checks will be skipped. Error: {e}")
     HINGLISH_DETECTOR = None
+
+
 
 
 
@@ -40,7 +36,7 @@ app = FastAPI()
 
 
 
-# --- Bot Configuration (No changes needed here) ---
+# --- Bot Configuration ---
 BOT_LANGUAGE_MAP = {
     "delhi_mentor_male": ["hindi", "english"],
     "delhi_mentor_female": ["hindi", "english"],
@@ -685,26 +681,31 @@ def normalize_and_tokenize(text: str) -> list[str]:
 
 def detect_any_greeting_language(user_input: str, bot_languages: list[str]) -> str | None:
     """
-    Detects a greeting language from user input, giving priority to the
-    languages supported by the specific bot.
+    Returns a matched greeting language only if input is 2–3 words long.
+    Prioritizes the languages supported by the bot.
     """
     tokens = normalize_and_tokenize(user_input)
 
-    # 1. Prioritize bot-supported languages
+    # ✅ Match only if input has between 2 and 3 words
+    if len(tokens) < 2 or len(tokens) > 3:
+        return None  # 🟡 Skip keyword detection for long inputs
+
+    # 1. First try to match supported languages
     for lang in bot_languages:
         if lang in KEYWORD_MAP:
             for word in KEYWORD_MAP[lang]:
                 if word in tokens:
                     return lang
 
-    # 2. Check unsupported languages to reject with explanation
+    # 2. Then check for unsupported keyword matches (to reject)
     for lang in KEYWORD_MAP:
         if lang not in bot_languages:
             for word in KEYWORD_MAP[lang]:
                 if word in tokens:
                     return lang
 
-    return None
+   return None
+
 
 def detect_language_with_model(text: str) -> str | None:
     """Uses the specialized model to get a language label ('hin', 'eng', 'hin-eng')."""
@@ -719,12 +720,18 @@ def detect_language_with_model(text: str) -> str | None:
 def is_devanagari(text: str) -> bool:
     return any('\u0900' <= char <= '\u097F' for char in text)
 
+
+# -----------------------------
+# --- FastAPI Request Model ---
+# -----------------------------
+
 class InputPayload(BaseModel):
     bot_id: str
     user_input: str
 
-
-# --- Corrected Endpoint: Passes the bot's languages to the function ---
+# -----------------------------
+# --- Language Detection API ---
+# -----------------------------
 @app.post("/language_check")
 async def language_check(payload: InputPayload):
     debug_info = {
@@ -746,7 +753,7 @@ async def language_check(payload: InputPayload):
     supported_languages = BOT_LANGUAGE_MAP[payload.bot_id]
 
 
-
+  # Step 0: If Hindi is supported, do Devanagari detection first
     if 'hindi' in supported_languages :
         if is_devanagari(payload.user_input):
             debug_info["used"].append("devanagari -> lingua")
@@ -761,7 +768,7 @@ async def language_check(payload: InputPayload):
                     debug_info["result"] = "rejected: devanagari lingua"
                     return {"supported": False, "message": BOT_PERSONALITY_MAP[payload.bot_id], "debug_info": debug_info}
         else:
-            # Latin-script → Hinglish model
+            # Hinglish model if Latin-script
             debug_info["used"].append("hinglish_model")
             model_detected_label = detect_language_with_model(payload.user_input)
             if model_detected_label:
@@ -800,7 +807,7 @@ async def language_check(payload: InputPayload):
                             }
             else:
                 debug_info["used"].append("hinglish_model_failed")
-    # Step 1: Keyword Greeting Detection
+  # ✅ Step 1: Greeting/Keyword Detection (now runs only for 2–3 word inputs)
     detected_greeting_lang = detect_any_greeting_language(payload.user_input, supported_languages)
     if detected_greeting_lang:
         debug_info["used"].append("keyword_match")
@@ -817,10 +824,7 @@ async def language_check(payload: InputPayload):
                 "debug_info": debug_info
             }
 
-    # Step 2: Check Devanagari or Hinglish path
-    
-
-    # Step 3: Final fallback — Lingua detection
+    # Step 2: Final Fallback → Lingua detector
     debug_info["used"].append("final_lingua_fallback")
     detected_language_enum = DETECTOR.detect_language_of(payload.user_input)
     if detected_language_enum:
@@ -833,7 +837,7 @@ async def language_check(payload: InputPayload):
             debug_info["result"] = "rejected: fallback lingua"
             return {"supported": False, "message": BOT_PERSONALITY_MAP[payload.bot_id], "debug_info": debug_info}
 
-    # Step 4: Nothing detected — allow as safe fallback
+    # Step 3: Nothing detected — allow fallback
     debug_info["used"].append("final_fallback")
     debug_info["result"] = "accepted: no detection, assumed safe"
     return {"supported": True, "debug_info": debug_info}
